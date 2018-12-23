@@ -1,6 +1,10 @@
-# bringList
+# MMM-bringList
 
 This is a module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/).
+
+*The module is currently only available in german*
+
+*The module is not released by the bring! company*
 
 Displays Your Bring! List in a table view on your mirror. The refresh interval is 60 Seconds. You need to create a email/password account on the website to use this module. Just use the "create magic link" function in the app, use it to login to the website on a laptop or desktop comupter and create a emailadress/passowrd login.
 
@@ -22,7 +26,7 @@ To use this module, add the following configuration block to the modules array i
 var config = {
     modules: [
         {
-            module: 'mmm-bring-list',
+            module: 'MMM-bringList',
             config: {
                 // See below for configurable options
             }
@@ -46,9 +50,11 @@ var config = {
 var config = {
     modules: [
         {
-            module: 'mmm-bring-list',
+            module: 'MMM-bringList',
+            position: 'top_right',
+            header: 'Einkaufen',
             config: {
-                listname: 'Zuhasue',
+                listname: 'Zuhause',
                 email: 'someone@example.com',
                 password: 'secret',
                 columns: 3,
