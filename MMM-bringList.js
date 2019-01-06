@@ -15,7 +15,7 @@ Module.register("MMM-bringList", {
     socketNotificationReceived: function (notification, payload) {
         if (notification === "bringList-LISTUPDATE") {
             // set dataNotification
-            if (payload.listName === this.config.listname) {
+            if (payload.listName.toLowerCase() === this.config.listname.toLowerCase()) {
                 this.listData = payload;
                 this.updateDom(100);
             }
