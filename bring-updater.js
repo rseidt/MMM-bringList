@@ -5,7 +5,6 @@ var BringUpdater = /** @class */ (function () {
     function BringUpdater() {
         this.bringProfiles = [];
         this.queryJobs = [];
-        this.interval = 60 * 1000; //1 Minute
     }
     BringUpdater.prototype.hasJobs = function () {
         return this.queryJobs.length > 0;

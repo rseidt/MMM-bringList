@@ -51,7 +51,7 @@ module.exports = NodeHelper.create({
             this.updater.refreshLists(function (l) {
                 _this.sendSocketNotification("bringList-LISTUPDATE", l);
             });
-            this.currentInterval = setTimeout(function () {
+            this.currentInterval = setInterval(function () {
                 _this.updater.refreshLists(function (l) {
                     _this.sendSocketNotification("bringList-LISTUPDATE", l);
                 });

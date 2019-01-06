@@ -9,4 +9,5 @@ First public release
 
 ## [1.0.1] - Bugfix
 
-Fixed list name comparison
+- Fixed list name comparison
+- Fixed interval bug
