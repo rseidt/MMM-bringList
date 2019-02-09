@@ -28,11 +28,17 @@ var BringProfile = /** @class */ (function () {
             }
         };
     };
-    BringProfile.prototype.getListsForUser = function (callback) {
+    BringProfile.prototype.getListsForUser = function (callback, retryNo) {
         var _this = this;
+        if (retryNo === void 0) { retryNo = 0; }
         request.get(this.listsForUserUrl.replace(/\{userid\}/g, this.userid), this.requestGetOptions(), function (err, res, response) {
             if (err) {
-                console.error("Unexpected error connecting to bringList: " + err);
+                if (retryNo < 3) {
+                    setTimeout(function () { _this.getListsForUser(callback, ++retryNo); }, 1000);
+                }
+                else {
+                    console.error("Unexpected error connecting to bringList: " + err);
+                }
             }
             else if (res && res.statusCode != 200) {
                 console.error("Received unexpected status code from bring server when loading Lists for User: " + res.statusCode);
@@ -47,17 +53,37 @@ var BringProfile = /** @class */ (function () {
             }
         });
     };
-    BringProfile.prototype.initializeCatalog = function (callback) {
+    BringProfile.prototype.initializeCatalog = function (callback, retryNo) {
         var _this = this;
+        if (retryNo === void 0) { retryNo = 0; }
         request.get({ url: this.catalogUrl, json: true }, function (err, res, body) {
-            _this.catalog = body;
-            callback();
+            if (err) {
+                if (retryNo < 3) {
+                    setTimeout(function () { _this.initializeCatalog(callback, ++retryNo); }, 1000);
+                }
+                else {
+                    console.error("Unexpected error during download of Catalog: " + err);
+                }
+            }
+            else {
+                _this.catalog = body;
+                callback();
+            }
         });
     };
-    BringProfile.prototype.initializeArticleLocalization = function (callback) {
+    BringProfile.prototype.initializeArticleLocalization = function (callback, retryNo) {
         var _this = this;
+        if (retryNo === void 0) { retryNo = 0; }
         this.articleLocalization = [];
         request.get({ url: this.articleLocalizationUrl, json: true }, function (err, res, body) {
+            if (err) {
+                if (retryNo < 3) {
+                    setTimeout(function () { _this.initializeArticleLocalization(callback, ++retryNo); }, 1000);
+                }
+                else {
+                    console.error("Unexpected error during download of ArticleLocalization: " + err);
+                }
+            }
             for (var key in body) {
                 if (Object.prototype.hasOwnProperty.call(body, key)) {
                     var val = body[key];
@@ -67,8 +93,9 @@ var BringProfile = /** @class */ (function () {
             callback();
         });
     };
-    BringProfile.prototype.login = function (callback) {
+    BringProfile.prototype.login = function (callback, retryNo) {
         var _this = this;
+        if (retryNo === void 0) { retryNo = 0; }
         var authenticationperformed = false;
         if (!this.articleLocalization) {
             this.initializeArticleLocalization(function () {
@@ -86,7 +113,12 @@ var BringProfile = /** @class */ (function () {
         }
         request.post({ url: this.authUrl, form: { email: this.email, password: this.password } }, function (err, res, body) {
             if (err) {
-                console.error("Unexpected error connecting to bringList: " + err);
+                if (retryNo < 3) {
+                    _this.login(callback, ++retryNo);
+                }
+                else {
+                    console.error("Unexpected error connecting to bringList: " + err);
+                }
             }
             else if (res && res.statusCode == 401) {
                 console.error("Could not authenticate to bringList.");
@@ -105,7 +137,7 @@ var BringProfile = /** @class */ (function () {
     };
     BringProfile.prototype.loadList = function (listName, done) {
         var _this = this;
-        if (!this.access_token) {
+        if (!this.access_token || !this.catalog || !this.articleLocalization) {
             this.login(function () {
                 var list = _this.userLists.filter(function (l) { return l.listName === listName; })[0];
                 _this.fetchList(list.listId, true, done);
@@ -116,15 +148,21 @@ var BringProfile = /** @class */ (function () {
             this.fetchList(list.listId, true, done);
         }
     };
-    BringProfile.prototype.fetchList = function (listId, reauthenticate, done) {
+    BringProfile.prototype.fetchList = function (listId, reauthenticate, done, retryNo) {
         var _this = this;
+        if (retryNo === void 0) { retryNo = 0; }
         if (!this.access_token && reauthenticate) {
             this.login(function () { _this.fetchList(listId, false, done); });
         }
         else {
             request.get(this.listUrl.replace(/\{listId\}/, listId), this.requestGetOptions(), function (err, res, response) {
                 if (err) {
-                    console.error("Unexpected error when connecting to bring server: " + err);
+                    if (retryNo < 3) {
+                        setTimeout(function () { _this.fetchList(listId, reauthenticate, done, ++retryNo); }, 1000);
+                    }
+                    else {
+                        console.error("Unexpected error when connecting to bring server: " + err);
+                    }
                 }
                 else if (res && res.statusCode == 401 && reauthenticate) {
                     _this.login(function () { _this.fetchList(listId, false, done); });
@@ -146,11 +184,17 @@ var BringProfile = /** @class */ (function () {
             });
         }
     };
-    BringProfile.prototype.getListDetail = function (list, callback) {
+    BringProfile.prototype.getListDetail = function (list, callback, retryNo) {
         var _this = this;
+        if (retryNo === void 0) { retryNo = 0; }
         request.get(this.listItemDetailsUrl.replace(/\{listId\}/, list.listId), this.requestGetOptions(), function (err, res, response) {
             if (err) {
-                console.error("Unexpected error when connecting to bring server: " + err);
+                if (retryNo < 3) {
+                    window.setTimeout(function () { _this.getListDetail(list, callback, ++retryNo); }, 1000);
+                }
+                else {
+                    console.error("Unexpected error when connecting to bring server: " + err);
+                }
             }
             else if (res && res.statusCode != 200) {
                 console.error("Received unexpected status code from bring server: " + res.statusCode);
@@ -202,6 +246,9 @@ var BringProfile = /** @class */ (function () {
         if (!lookupId) {
             lookupId = listItem.name;
         }
+        this.setImageToItem(sectionId, lookupId, listItem);
+    };
+    BringProfile.prototype.setImageToItem = function (sectionId, lookupId, listItem) {
         var lookupItems = [];
         if (sectionId) {
             lookupItems = this.catalog.sections.filter(function (s) { return s.key == sectionId; })[0].items;

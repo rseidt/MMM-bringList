@@ -11,3 +11,7 @@ First public release
 
 - Fixed list name comparison
 - Fixed interval bug
+
+## [1.0.2] - Added some retry and circuit breakers at some places for stability
+
+- Retry all HTTP calls 3 times (interval 1 second) bevore giving up
