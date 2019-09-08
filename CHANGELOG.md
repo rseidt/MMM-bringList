@@ -15,3 +15,8 @@ First public release
 ## [1.0.2] - Added some retry and circuit breakers at some places for stability
 
 - Retry all HTTP calls 3 times (interval 1 second) bevore giving up
+
+## [1.0.3] - Added some more verbous error messeages in the log to help identify failures.
+
+- Log the response if the download of the list master data from the bring api fails
+- Log the available lists is the List specified in the config was not found. 

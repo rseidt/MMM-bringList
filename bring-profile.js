@@ -44,12 +44,17 @@ var BringProfile = /** @class */ (function () {
                 console.error("Received unexpected status code from bring server when loading Lists for User: " + res.statusCode);
             }
             else {
-                response.lists.forEach(function (item) {
-                    if (_this.userLists.filter(function (l) { return l.listId === item.listUuid; }).length === 0) {
-                        _this.userLists.push({ hash: '', items: [], listId: item.listUuid, listName: item.name });
-                    }
-                });
-                callback();
+                if (response.lists) {
+                    response.lists.forEach(function (item) {
+                        if (_this.userLists.filter(function (l) { return l.listId === item.listUuid; }).length === 0) {
+                            _this.userLists.push({ hash: '', items: [], listId: item.listUuid, listName: item.name });
+                        }
+                    });
+                    callback();
+                }
+                else {
+                    console.error("Could not find 'lists' Element in Response from bring: " + JSON.stringify(response));
+                }
             }
         });
     };
@@ -138,14 +143,19 @@ var BringProfile = /** @class */ (function () {
     BringProfile.prototype.loadList = function (listName, done) {
         var _this = this;
         if (!this.access_token || !this.catalog || !this.articleLocalization) {
-            this.login(function () {
-                var list = _this.userLists.filter(function (l) { return l.listName === listName; })[0];
-                _this.fetchList(list.listId, true, done);
-            });
+            this.login(function () { return _this.executeListFetch(listName, done); });
         }
         else {
-            var list = this.userLists.filter(function (l) { return l.listName === listName; })[0];
+            this.executeListFetch(listName, done);
+        }
+    };
+    BringProfile.prototype.executeListFetch = function (listName, done) {
+        var list = this.userLists.filter(function (l) { return l.listName === listName; })[0];
+        if (list && list.listId) {
             this.fetchList(list.listId, true, done);
+        }
+        else {
+            console.error('A list with the name "' + listName + '" does not exist in your user Profile. We found the following lists: ' + this.userLists.map(function (l) { return l.listName; }).join(', '));
         }
     };
     BringProfile.prototype.fetchList = function (listId, reauthenticate, done, retryNo) {

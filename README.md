@@ -39,7 +39,7 @@ var config = {
 
 | Option           | Description
 |----------------- |-----------
-| `listname`       | *Required* The name of the List you want to display 
+| `listname`       | *Required* The name of the List you want to display. Please make sure this matches EXACTLY. The Name is case sensitive. 
 | `email`          | *Required* The email adress to log in to your bring account 
 | `password`       | *Required* The password to log in to your bring account 
 | `columns`        | *Optional* The number of colums in the table view (default = 4)
@@ -51,8 +51,6 @@ var config = {
     modules: [
         {
             module: 'MMM-bringList',
-            position: 'top_right',
-            header: 'Einkaufen',
             config: {
                 listname: 'Zuhause',
                 email: 'someone@example.com',
