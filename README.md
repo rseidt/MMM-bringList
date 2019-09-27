@@ -27,6 +27,7 @@ var config = {
     modules: [
         {
             module: 'MMM-bringList',
+            position: 'top_right',
             config: {
                 // See below for configurable options
             }
@@ -51,6 +52,7 @@ var config = {
     modules: [
         {
             module: 'MMM-bringList',
+            position: 'top_right',
             config: {
                 listname: 'Zuhause',
                 email: 'someone@example.com',
