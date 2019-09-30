@@ -28,7 +28,7 @@ var config = {
         {
             module: 'MMM-bringList',
             position: 'top_right',
-            header: 'Einkaufsliste',
+            header: 'Einkaufen',
             config: {
                 // See below for configurable options
             }
@@ -44,8 +44,10 @@ var config = {
 | `listname`       | *Required* The name of the List you want to display. Please make sure this matches EXACTLY. The Name is case sensitive. 
 | `email`          | *Required* The email adress to log in to your bring account 
 | `password`       | *Required* The password to log in to your bring account 
-| `columns`        | *Optional* The number of colums in the table view (default = 4)
-| `maxrows`        | *Optional* The maximum number of rows to display in the table view  (default = 4)
+| `columns`        | *Optional* The number of colums in the table view (default = `4`)
+| `maxrows`        | *Optional* The maximum number of rows to display in the table view (default = `4`)
+| `updateInterval` | *Optional* The update frequency in milliseconds. (default = `60000` = 1 Minute, cannot be set to less than `30000` = 30 seconds to avoid mistakes)
+| `verboseLogging` | *Optional* Writes many more log entries to the console if set to `true` to identify failures (default = `false`)
 
 ### Example configuration:
 ```js
@@ -54,13 +56,15 @@ var config = {
         {
             module: 'MMM-bringList',
             position: 'top_right',
-            header: 'Einkaufsliste',
+            header: 'Einkaufen',
             config: {
                 listname: 'Zuhause',
                 email: 'someone@example.com',
                 password: 'secret',
                 columns: 3,
-                maxrows: 5
+                maxrows: 5,
+                updateInterval: 120000,
+                verboseLogging: true
             }
         }
     ]

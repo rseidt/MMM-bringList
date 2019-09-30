@@ -5,7 +5,9 @@ Module.register("MMM-bringList", {
         email: "",
         password: "",
         columns: 4,
-        maxrows: 4
+        maxrows: 4,
+        updateInterval: 60000,
+        verboseLogging: false
     },
     listData: null,
     requiresVersion: "2.1.0",

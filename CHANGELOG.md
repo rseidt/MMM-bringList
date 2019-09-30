@@ -16,7 +16,12 @@ First public release
 
 - Retry all HTTP calls 3 times (interval 1 second) bevore giving up
 
-## [1.0.3] - Added some more verbous error messeages in the log to help identify failures.
+## [1.0.3] - Added some more verbose error messeages in the log to help identify failures.
 
 - Log the response if the download of the list master data from the bring api fails
 - Log the available lists is the List specified in the config was not found. 
+
+## [1.0.4] - Added config Elements verboseLogging and updateInterval.
+
+- To stop polluting logfiles, the verboseLogging element is added to the configuration object
+- To provide more control over the network traffic, the updateInterval can now be configured.  

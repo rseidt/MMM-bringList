@@ -9,7 +9,8 @@ var BringUpdater = /** @class */ (function () {
     BringUpdater.prototype.hasJobs = function () {
         return this.queryJobs.length > 0;
     };
-    BringUpdater.prototype.register = function (config) {
+    BringUpdater.prototype.register = function (config, logger) {
+        this.logger = logger;
         var profile = null;
         var job = null;
         var matchProfiles = this.bringProfiles.filter(function (j) { return j.email === config.email; });
@@ -18,7 +19,7 @@ var BringUpdater = /** @class */ (function () {
             profile = matchProfiles[0];
         }
         else {
-            profile = new bring_profile_1.BringProfile(config.email, config.password);
+            profile = new bring_profile_1.BringProfile(config.email, config.password, this.logger);
             this.bringProfiles.push(profile);
         }
         if (matchJobs.length > 0) {
@@ -49,17 +50,17 @@ var BringUpdater = /** @class */ (function () {
     };
     BringUpdater.prototype.refreshLists = function (onlistupdate) {
         var _this = this;
-        console.log("BRING: Starting List update...");
+        this.logger.log("Starting List update...", true);
         this.queryJobs.forEach(function (job) {
             if (job.listsToTrack && job.listsToTrack.length > 0) {
                 var profile = _this.bringProfiles.filter(function (p) { return p.email === job.email; })[0];
                 job.listsToTrack.forEach(function (list) {
                     profile.loadList(list.listName, function (l) {
                         if (l.hash != list.hash) {
-                            console.log("BRING: List was updated.");
+                            _this.logger.log("List content has changed since last interval. Refreshing view.", false);
                             profile.getListDetail(l, function (detailedList) {
                                 list.hash = l.hash;
-                                console.log("BRING: Passing Updated List to helper.");
+                                _this.logger.log("Passing Updated List to helper.", true);
                                 onlistupdate(detailedList);
                             });
                         }

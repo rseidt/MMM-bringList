@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var request = require("request");
 var ts_md5_1 = require("ts-md5");
 var BringProfile = /** @class */ (function () {
-    function BringProfile(email, password) {
+    function BringProfile(email, password, logger) {
         this.authUrl = "https://api.getbring.com/rest/v2/bringauth";
         this.listUrl = "https://api.getbring.com/rest/v2/bringlists/{listId}";
         this.listsForUserUrl = "https://api.getbring.com/rest/v2/bringusers/{userid}/lists";
@@ -16,6 +16,7 @@ var BringProfile = /** @class */ (function () {
         this.userLists = [];
         this.email = email;
         this.password = password;
+        this.logger = logger;
     }
     BringProfile.prototype.requestGetOptions = function () {
         return {
@@ -37,11 +38,11 @@ var BringProfile = /** @class */ (function () {
                     setTimeout(function () { _this.getListsForUser(callback, ++retryNo); }, 1000);
                 }
                 else {
-                    console.error("Unexpected error connecting to bringList: " + err);
+                    _this.logger.logError("Unexpected error connecting to bringList: " + err);
                 }
             }
             else if (res && res.statusCode != 200) {
-                console.error("Received unexpected status code from bring server when loading Lists for User: " + res.statusCode);
+                _this.logger.logError("Received unexpected status code from bring server when loading Lists for User: " + res.statusCode);
             }
             else {
                 if (response.lists) {
@@ -53,7 +54,7 @@ var BringProfile = /** @class */ (function () {
                     callback();
                 }
                 else {
-                    console.error("Could not find 'lists' Element in Response from bring: " + JSON.stringify(response));
+                    _this.logger.logError("Could not find 'lists' Element in Response from bring: " + JSON.stringify(response));
                 }
             }
         });
@@ -67,7 +68,7 @@ var BringProfile = /** @class */ (function () {
                     setTimeout(function () { _this.initializeCatalog(callback, ++retryNo); }, 1000);
                 }
                 else {
-                    console.error("Unexpected error during download of Catalog: " + err);
+                    _this.logger.logError("Unexpected error during download of Catalog: " + err);
                 }
             }
             else {
@@ -86,7 +87,7 @@ var BringProfile = /** @class */ (function () {
                     setTimeout(function () { _this.initializeArticleLocalization(callback, ++retryNo); }, 1000);
                 }
                 else {
-                    console.error("Unexpected error during download of ArticleLocalization: " + err);
+                    _this.logger.logError("Unexpected error during download of ArticleLocalization: " + err);
                 }
             }
             for (var key in body) {
@@ -122,11 +123,11 @@ var BringProfile = /** @class */ (function () {
                     _this.login(callback, ++retryNo);
                 }
                 else {
-                    console.error("Unexpected error connecting to bringList: " + err);
+                    _this.logger.logError("Unexpected error connecting to bringList: " + err);
                 }
             }
             else if (res && res.statusCode == 401) {
-                console.error("Could not authenticate to bringList.");
+                _this.logger.logError("Could not authenticate to bringList.");
             }
             else {
                 var result = JSON.parse(body);
@@ -155,7 +156,7 @@ var BringProfile = /** @class */ (function () {
             this.fetchList(list.listId, true, done);
         }
         else {
-            console.error('A list with the name "' + listName + '" does not exist in your user Profile. We found the following lists: ' + this.userLists.map(function (l) { return l.listName; }).join(', '));
+            this.logger.logError('A list with the name "' + listName + '" does not exist in your user Profile. We found the following lists: ' + this.userLists.map(function (l) { return l.listName; }).join(', '));
         }
     };
     BringProfile.prototype.fetchList = function (listId, reauthenticate, done, retryNo) {
@@ -171,14 +172,14 @@ var BringProfile = /** @class */ (function () {
                         setTimeout(function () { _this.fetchList(listId, reauthenticate, done, ++retryNo); }, 1000);
                     }
                     else {
-                        console.error("Unexpected error when connecting to bring server: " + err);
+                        _this.logger.logError("Unexpected error when connecting to bring server: " + err);
                     }
                 }
                 else if (res && res.statusCode == 401 && reauthenticate) {
                     _this.login(function () { _this.fetchList(listId, false, done); });
                 }
                 else if (res && res.statusCode != 200) {
-                    console.error("Received unexpected status code from bring server: " + res.statusCode);
+                    _this.logger.logError("Received unexpected status code from bring server: " + res.statusCode);
                 }
                 else {
                     var list = _this.userLists.filter(function (l) { return l.listId === listId; })[0];
@@ -203,11 +204,11 @@ var BringProfile = /** @class */ (function () {
                     window.setTimeout(function () { _this.getListDetail(list, callback, ++retryNo); }, 1000);
                 }
                 else {
-                    console.error("Unexpected error when connecting to bring server: " + err);
+                    _this.logger.logError("Unexpected error when connecting to bring server: " + err);
                 }
             }
             else if (res && res.statusCode != 200) {
-                console.error("Received unexpected status code from bring server: " + res.statusCode);
+                _this.logger.logError("Received unexpected status code from bring server: " + res.statusCode);
             }
             else {
                 list.items.forEach(function (listItem) {
@@ -219,7 +220,7 @@ var BringProfile = /** @class */ (function () {
                     });
                     _this.setIconUrl(listItem);
                 });
-                console.log("reporting new list");
+                _this.logger.log("reporting new list", true);
                 callback(list);
             }
         });
