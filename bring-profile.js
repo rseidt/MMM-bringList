@@ -38,7 +38,8 @@ var BringProfile = /** @class */ (function () {
                     setTimeout(function () { _this.getListsForUser(callback, ++retryNo); }, 1000);
                 }
                 else {
-                    _this.logger.logError("Unexpected error connecting to bringList: " + err);
+                    _this.logger.logError("Unexpected error connecting to bringList: " + err + ". Hopefully temporary. Will retry in 30 minutes.");
+                    setTimeout(function () { _this.getListsForUser(callback); }, 1800000);
                 }
             }
             else if (res && res.statusCode != 200) {
@@ -68,7 +69,8 @@ var BringProfile = /** @class */ (function () {
                     setTimeout(function () { _this.initializeCatalog(callback, ++retryNo); }, 1000);
                 }
                 else {
-                    _this.logger.logError("Unexpected error during download of Catalog: " + err);
+                    _this.logger.logError("Unexpected error during download of Catalog: " + err + ". Hopefully temporary. Will retry in 30 minutes.");
+                    setTimeout(function () { _this.initializeCatalog(callback); }, 1800000);
                 }
             }
             else {
@@ -87,7 +89,8 @@ var BringProfile = /** @class */ (function () {
                     setTimeout(function () { _this.initializeArticleLocalization(callback, ++retryNo); }, 1000);
                 }
                 else {
-                    _this.logger.logError("Unexpected error during download of ArticleLocalization: " + err);
+                    _this.logger.logError("Unexpected error during download of ArticleLocalization: " + err + ". Hopefully temporary. Will retry in 30 minutes.");
+                    setTimeout(function () { _this.initializeArticleLocalization(callback); }, 1800000);
                 }
             }
             for (var key in body) {
@@ -123,7 +126,8 @@ var BringProfile = /** @class */ (function () {
                     _this.login(callback, ++retryNo);
                 }
                 else {
-                    _this.logger.logError("Unexpected error connecting to bringList: " + err);
+                    _this.logger.logError("Unexpected error when connecting to bring server: " + err + ". Hopefully temporary. Will retry in 30 minutes.");
+                    setTimeout(function () { _this.login(callback); }, 1800000);
                 }
             }
             else if (res && res.statusCode == 401) {
@@ -172,7 +176,8 @@ var BringProfile = /** @class */ (function () {
                         setTimeout(function () { _this.fetchList(listId, reauthenticate, done, ++retryNo); }, 1000);
                     }
                     else {
-                        _this.logger.logError("Unexpected error when connecting to bring server: " + err);
+                        _this.logger.logError("Unexpected error when connecting to bring server: " + err + ". Hopefully temporary. Will retry in 30 minutes.");
+                        setTimeout(function () { _this.fetchList(listId, reauthenticate, done); }, 1800000);
                     }
                 }
                 else if (res && res.statusCode == 401 && reauthenticate) {
@@ -204,7 +209,8 @@ var BringProfile = /** @class */ (function () {
                     window.setTimeout(function () { _this.getListDetail(list, callback, ++retryNo); }, 1000);
                 }
                 else {
-                    _this.logger.logError("Unexpected error when connecting to bring server: " + err);
+                    _this.logger.logError("Unexpected error when connecting to bring server: " + err + ". Hopefully temporary. Will retry in 30 minutes.");
+                    window.setTimeout(function () { _this.getListDetail(list, callback); }, 1800000);
                 }
             }
             else if (res && res.statusCode != 200) {

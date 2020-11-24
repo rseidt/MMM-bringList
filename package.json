@@ -1,6 +1,6 @@
 {
   "name": "mmm-bring-list",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Displays Your Bring! List",
   "main": "mmm-bring-list.js",
   "author": "Robert Seidt",

@@ -24,4 +24,9 @@ First public release
 ## [1.0.4] - Added config Elements verboseLogging and updateInterval.
 
 - To stop polluting logfiles, the verboseLogging element is added to the configuration object
-- To provide more control over the network traffic, the updateInterval can now be configured.  
+- To provide more control over the network traffic, the updateInterval can now be configured.
+
+## [1.0.5] - Bugfx
+
+- after circuit breaker reached (Internet failure) loop stopped and was never reactivated.
+- Added a 30 minute pause period after circuit break and restart the loop aferwards.
