@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BringRemoteModels = exports.BringListModels = void 0;
 var BringListModels;
 (function (BringListModels) {
     var QueryJob = /** @class */ (function () {
@@ -65,6 +66,12 @@ var BringRemoteModels;
         return ListResponse;
     }());
     BringRemoteModels.ListResponse = ListResponse;
+    var CatalogResponse = /** @class */ (function () {
+        function CatalogResponse() {
+        }
+        return CatalogResponse;
+    }());
+    BringRemoteModels.CatalogResponse = CatalogResponse;
     var BringCatalog = /** @class */ (function () {
         function BringCatalog() {
         }
@@ -77,4 +84,10 @@ var BringRemoteModels;
         return CatalogSection;
     }());
     BringRemoteModels.CatalogSection = CatalogSection;
+    var CatalogSectionItem = /** @class */ (function () {
+        function CatalogSectionItem() {
+        }
+        return CatalogSectionItem;
+    }());
+    BringRemoteModels.CatalogSectionItem = CatalogSectionItem;
 })(BringRemoteModels = exports.BringRemoteModels || (exports.BringRemoteModels = {}));

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BringUpdater = void 0;
 var bring_profile_1 = require("./bring-profile");
 var BringUpdater = /** @class */ (function () {
     function BringUpdater() {

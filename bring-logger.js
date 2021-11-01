@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BringLogger = void 0;
 var BringLogger = /** @class */ (function () {
     function BringLogger(config) {
         this.config = config;

@@ -30,3 +30,7 @@ First public release
 
 - after circuit breaker reached (Internet failure) loop stopped and was never reactivated.
 - Added a 30 minute pause period after circuit break and restart the loop aferwards.
+
+## [1.0.6] - Adopted new Catalog structure
+
+- The remote models changed which broke BringList. Adopted structure change. 

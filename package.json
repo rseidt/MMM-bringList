@@ -1,12 +1,12 @@
 {
   "name": "mmm-bring-list",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Displays Your Bring! List",
   "main": "mmm-bring-list.js",
   "author": "Robert Seidt",
   "license": "MIT",
   "dependencies": {
-    "request": "2.88.0",
-    "ts-md5": "1.2.4"
+    "request": "2.88.2",
+    "ts-md5": "1.2.9"
   }
 }

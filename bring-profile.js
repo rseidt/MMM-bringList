@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BringProfile = void 0;
 var request = require("request");
 var ts_md5_1 = require("ts-md5");
 var BringProfile = /** @class */ (function () {
@@ -63,7 +64,7 @@ var BringProfile = /** @class */ (function () {
     BringProfile.prototype.initializeCatalog = function (callback, retryNo) {
         var _this = this;
         if (retryNo === void 0) { retryNo = 0; }
-        request.get({ url: this.catalogUrl, json: true, rejectUnauthorized: false}, function (err, res, body) {
+        request.get({ url: this.catalogUrl, json: true, rejectUnauthorized: false }, function (err, res, body) {
             if (err) {
                 if (retryNo < 3) {
                     setTimeout(function () { _this.initializeCatalog(callback, ++retryNo); }, 1000);
