@@ -63,7 +63,7 @@ var BringProfile = /** @class */ (function () {
     BringProfile.prototype.initializeCatalog = function (callback, retryNo) {
         var _this = this;
         if (retryNo === void 0) { retryNo = 0; }
-        request.get({ url: this.catalogUrl, json: true }, function (err, res, body) {
+        request.get({ url: this.catalogUrl, json: true, rejectUnauthorized: false}, function (err, res, body) {
             if (err) {
                 if (retryNo < 3) {
                     setTimeout(function () { _this.initializeCatalog(callback, ++retryNo); }, 1000);
@@ -74,7 +74,7 @@ var BringProfile = /** @class */ (function () {
                 }
             }
             else {
-                _this.catalog = body;
+                _this.catalog = body.catalog;
                 callback();
             }
         });
@@ -83,7 +83,7 @@ var BringProfile = /** @class */ (function () {
         var _this = this;
         if (retryNo === void 0) { retryNo = 0; }
         this.articleLocalization = [];
-        request.get({ url: this.articleLocalizationUrl, json: true }, function (err, res, body) {
+        request.get({ url: this.articleLocalizationUrl, json: true, rejectUnauthorized: false }, function (err, res, body) {
             if (err) {
                 if (retryNo < 3) {
                     setTimeout(function () { _this.initializeArticleLocalization(callback, ++retryNo); }, 1000);
@@ -268,12 +268,12 @@ var BringProfile = /** @class */ (function () {
     BringProfile.prototype.setImageToItem = function (sectionId, lookupId, listItem) {
         var lookupItems = [];
         if (sectionId) {
-            lookupItems = this.catalog.sections.filter(function (s) { return s.key == sectionId; })[0].items;
+            lookupItems = this.catalog.sections.filter(function (s) { return s.sectionId == sectionId; })[0].items;
         }
         else {
             this.catalog.sections.forEach(function (s) { return s.items.forEach(function (it) { return lookupItems.push(it); }); });
         }
-        if (lookupItems.filter(function (i) { return i == lookupId; }).length > 0) {
+        if (lookupItems.filter(function (i) { return i.itemId == lookupId; }).length > 0) {
             listItem.imagePath = this.getImagePath(lookupId);
         }
         else {
